@@ -50,9 +50,9 @@ async def main():
             session.post(f'{serverTwo}/start')
         ]
         checkHealthServerOne = requests.get(serverOne)
-        print(checkHealthServerOne.text)
+        print(checkHealthServerOne.json())
         checkHealthServerTwo = requests.get(serverTwo)
-        print(checkHealthServerTwo.text)
+        print(checkHealthServerTwo.json())
         responses = await asyncio.gather(*post_tasks)
         chatOneJSON = await responses[0].json()
         chatOne = chatOneJSON['chatId']
@@ -61,8 +61,8 @@ async def main():
         chatTwo = chatTwoJSON['chatId']
         
         print(chatOne,chatTwo)
-        stressTest(chatOne,serverOne)
-        # await startChat(chatOne,chatOne,serverOne,serverTwo)
-        # recursiveChat(chatOne,chatOne,serverOne,serverTwo)
+        # stressTest(chatOne,serverOne)
+        await startChat(chatOne,chatOne,serverOne,serverTwo)
+        recursiveChat(chatOne,chatOne,serverOne,serverTwo)
 asyncio.run(main())
 

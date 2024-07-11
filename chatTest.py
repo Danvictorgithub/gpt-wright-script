@@ -40,8 +40,8 @@ async def main():
     async with aiohttp.ClientSession() as session:
         # serverOne = "http://localhost:8080"
         # serverTwo = "http://localhost:8080"
-        serverOne = 'https://gpt-wright-four.onrender.com'
-        serverTwo = 'https://gpt-wright-four.onrender.com'
+        serverOne = 'https://0896-175-176-84-205.ngrok-free.app'
+        serverTwo = 'https://0896-175-176-84-205.ngrok-free.app'
         post_tasks = [
             session.post(f'{serverOne}/start'),
             session.post(f'{serverTwo}/start')
