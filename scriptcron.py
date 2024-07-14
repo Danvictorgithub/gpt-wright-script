@@ -67,7 +67,7 @@ async def fetch_url(url, method: HTTPMethod = HTTPMethod.GET, *args, **kwargs):
             return await response.json()
 
 gpt_servers = ["http://localhost:8080","http://localhost:8081","http://localhost:8082","http://localhost:8083","http://localhost:8084"]
-gen_servers = ["http://localhost:8000","http://localhost:8001","http://localhost:8002","http://localhost:8003","http://localhost:8004"]
+gen_servers = ["http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000"]
 
 chatSettings = [
     {
@@ -133,7 +133,7 @@ async def continuous_fetch(server_index):
         await asyncio.sleep(0.1)
 
 async def main():
-    tasks = [continuous_fetch(i) for i in range(5)]
+    tasks = [continuous_fetch(i) for i in range(4)]
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
