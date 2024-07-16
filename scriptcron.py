@@ -5,47 +5,16 @@ import asyncio
 import logging
 import random
 
-def generate_random_topics_and_conversations(num_items):
+def generate_random_subject():
     subjects = [
         "Technology", "Science", "Health", "Education", "Business", "Entertainment", 
         "Sports", "Politics", "Environment", "History", "Travel", "Food", "Music", 
         "Books", "Movies", "Fashion", "Hobbies", "Relationships", "Fitness", "Culture",
         "Games", "Cartoons", "Toys", "Friends", "School", "Holidays"
     ]
-    adjectives = [
-        "Advanced", "Future", "Modern", "Innovative", "Global", "Revolutionary", 
-        "Sustainable", "Digital", "Cutting-edge", "Historic", "Popular", "New", 
-        "Classic", "Delicious", "Exciting", "Relaxing", "Challenging", "Famous", 
-        "Unique", "Traditional", "Fun", "Cool", "Interesting", "Amazing", "Awesome"
-    ]
-    nouns = [
-        "Trends", "Challenges", "Opportunities", "Developments", "Issues", "Impacts", 
-        "Advances", "Techniques", "Strategies", "Breakthroughs", "Destinations", 
-        "Recipes", "Genres", "Authors", "Directors", "Styles", "Activities", 
-        "Experiences", "Routines", "Practices", "Stories", "Characters", "Episodes", 
-        "Toys", "Projects"
-    ]
-    starters = [
-        "What do you think about", "How do you feel about", "What's your opinion on", 
-        "Have you heard about", "Can you tell me about", "What are your thoughts on", 
-        "Do you like", "Have you tried", "What's your favorite", "How do you enjoy",
-        "Do you know", "What's the best", "Tell me about", "Do you have a favorite", 
-        "What do you enjoy", "Can you explain", "How did you get into", "What makes you excited about"
-    ]
     
-    topics_and_conversations = []
-    for _ in range(num_items):
-        subject = random.choice(subjects)
-        adjective = random.choice(adjectives)
-        noun = random.choice(nouns)
-        topic = f"{adjective} {subject} {noun}"
-        
-        starter = random.choice(starters)
-        conversation = f"{starter} {topic}?"
-        
-        topics_and_conversations.append(conversation)
+    return random.choice(subjects)
     
-    return topics_and_conversations
 
 class HTTPMethod(Enum):
     GET = "GET"
@@ -124,7 +93,7 @@ async def continuous_fetch(server_index):
                 print(f"Fetch failed for server {server_index + 1}")
             
             # Update topic regardless of fetch success
-            chat_setting["topic"] = generate_random_topics_and_conversations(1)[0].split()[-1]
+            chat_setting["topic"] = generate_random_subject()
         
         except Exception as e:
             logging.error(f"Error in continuous fetch loop for server {server_index + 1}: {e}")
@@ -133,7 +102,7 @@ async def continuous_fetch(server_index):
         await asyncio.sleep(0.1)
 
 async def main():
-    tasks = [continuous_fetch(i) for i in range(4)]
+    tasks = [continuous_fetch(i) for i in range(5)]
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
