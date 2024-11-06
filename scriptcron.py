@@ -3,6 +3,7 @@ from aiohttp import ClientSession
 import asyncio
 import logging
 import random
+import argparse
 
 def generate_random_subject():
     subjects = [
@@ -109,9 +110,20 @@ async def continuous_fetch(server_index):
         
         # Optional: Add a small delay between iterations for this specific server
         await asyncio.sleep(0.1)
+        
+# Create the parser
+parser = argparse.ArgumentParser(description="Process some arguments.")
 
+# Add arguments
+parser.add_argument('-n', type=int, default=10, help="An integer number (default is 10)")
+
+# Parse the arguments
+args = parser.parse_args()
+
+# Access the value of 'n'
+n_value = args.n
 async def main():
-    tasks = [continuous_fetch(i) for i in range(5)]
+    tasks = [continuous_fetch(i) for i in range(n_value)]
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
