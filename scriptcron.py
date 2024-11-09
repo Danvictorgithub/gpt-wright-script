@@ -24,12 +24,11 @@ def generate_random_subject():
     return random.choice(subjects)
     
 
-class HTTPMethod(Enum):
+class HTTPMethod:
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
     DELETE = "DELETE"
-    PATCH = "PATCH"
 
 async def fetch_url(url, method: HTTPMethod = HTTPMethod.GET, *args, **kwargs):
     async with ClientSession() as session:
@@ -126,7 +125,7 @@ async def fetch_with_retry(url, method, data, max_retries=5, delay=1):
         if attempt < max_retries:
             await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
     return None
-MAX_RETRIES = 5
+
 MAX_RETRIES = 5
 
 async def continuous_fetch(server_index):
