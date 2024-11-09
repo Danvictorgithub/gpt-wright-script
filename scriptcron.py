@@ -1,4 +1,3 @@
-from enum import Enum
 from aiohttp import ClientSession
 import asyncio
 import signal
@@ -114,10 +113,11 @@ async def fetch_with_retry(url, method, data, max_retries=5, delay=1):
         try:
             async with ClientSession() as session:
                 async with session.request(method, url, json=data) as response:
+                    response_text = await response.text()
                     if response.status == 200:
                         return await response.json()
                     else:
-                        logging.error(f"Request to {url} failed with status {response.status}: {await response.text()}")
+                        logging.error(f"Request to {url} failed with status {response.status}: {response_text}")
         except Exception as e:
             logging.error(f"Exception during request to {url}: {e}")
         
@@ -163,8 +163,8 @@ async def continuous_fetch(server_index):
     
     print(f"Stopping fetch loop for server {server_index + 1}")
         
-# Create the parser
-parser = argparse.ArgumentParser(description="Process some arguments.")
+# Define the argument parser
+parser = argparse.ArgumentParser(description="Script to continuously fetch data from servers.")
 
 # Add arguments
 parser.add_argument('-n', type=int, default=10, help="An integer number (default is 10)")
@@ -174,13 +174,14 @@ args = parser.parse_args()
 
 # Access the value of 'n'
 n_value = args.n
+
 async def main():
     tasks = [continuous_fetch(i) for i in range(len(gen_servers))]
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     try:
         asyncio.run(main())
-        logging.basicConfig(level=logging.INFO)
     except KeyboardInterrupt:
         print("Interrupted by user")
