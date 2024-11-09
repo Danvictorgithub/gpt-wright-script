@@ -35,8 +35,8 @@ async def fetch_url(url, method: HTTPMethod = HTTPMethod.GET, *args, **kwargs):
         async with method_action(url, *args, **kwargs) as response:
             return await response.json()
 
-gpt_servers = ["http://localhost:8080","http://localhost:8081","http://localhost:8082","http://localhost:8083","http://localhost:8084","http://localhost:8085","http://localhost:8086"]
-gen_servers = ["http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000"]
+gpt_servers = ["http://localhost:8080","http://localhost:8081","http://localhost:8082","http://localhost:8083","http://localhost:8084","http://localhost:8085","http://localhost:8086","http://localhost:8087","http://localhost:8088","http://localhost:8089","http://localhost:8090","http://localhost:8091"]
+gen_servers = ["http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000","http://localhost:8000"]
 
 chatSettings = [
     {
@@ -66,7 +66,7 @@ chatSettings = [
     },
         {
         "server_url": gpt_servers[5],
-        "topic": "school",
+        "topic": "technology",
         "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
     },
             {
@@ -74,6 +74,31 @@ chatSettings = [
         "topic": "life",
         "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Lets pretend to have a basic conversation, also don't say that you are an AI, and dont repeat yourself, please respond with short paragraphs and limit to a basic vocabulary and grammar, I will do the same. I repeat respond with short paragraph, Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
     },
+        {
+        "server_url": gpt_servers[7],
+        "topic": "Games",
+        "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
+    },
+    {
+        "server_url": gpt_servers[8],
+        "topic": "Entertainment",
+        "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
+    },
+    {
+        "server_url": gpt_servers[9],
+        "topic": "Books",
+        "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
+    },
+    {
+        "server_url": gpt_servers[10],
+        "topic": "Music",
+        "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
+    },
+    {
+        "server_url": gpt_servers[11],
+        "topic": "Movies",
+        "initial_message": "Respond to the following statement without using the word 'Exactly!', or 'Absolutely!' or 'Definitely!' because it doesn't sound human at the beginning:Let's have a simple conversation using limited vocabulary. Please keep your responses brief, and I'll do the same. Avoid repeating 'Absolutely!'You can also try to change topic if you are starting to just agree with the statement I don't want a loop of conversation just saying 'I agree!' or any statement like that'"
+    }
 ]
 
 async def fetch_with_retry(url, method, json_data, max_retries=3, delay=1):
