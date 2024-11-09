@@ -109,18 +109,26 @@ chatSettings = [
     }
 ]
 
-async def fetch_with_retry(url, method, json_data, max_retries=3, delay=1):
-    for attempt in range(max_retries):
+async def fetch_with_retry(url, method, data, max_retries=5, delay=1):
+    attempt = 0
+    while attempt < max_retries:
         try:
-            result = await fetch_url(url, method, json=json_data)
-            if result is not None:
-                return result
+            async with ClientSession() as session:
+                async with session.request(method, url, json=data) as response:
+                    if response.status == 200:
+                        return await response.json()
+                    else:
+                        logging.error(f"Request to {url} failed with status {response.status}: {await response.text()}")
         except Exception as e:
-            logging.error(f"Attempt {attempt + 1} failed with error: {e}")
-        if attempt < max_retries - 1:
+            logging.error(f"Exception during request to {url}: {e}")
+        
+        attempt += 1
+        if attempt < max_retries:
             await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
     return None
 MAX_RETRIES = 5
+MAX_RETRIES = 5
+
 async def continuous_fetch(server_index):
     gen_server = gen_servers[server_index]
     chat_setting = chatSettings[server_index]
@@ -129,7 +137,7 @@ async def continuous_fetch(server_index):
     while not stop_fetching:
         try:
             url = f"{gen_server}/api/generate_conversation"
-            result = await fetch_with_retry(url, HTTPMethod.POST, chat_setting)
+            result = await fetch_with_retry(url, HTTPMethod.POST, chat_setting, max_retries=MAX_RETRIES)
             
             if result is not None:
                 print(f"Successful fetch for server {server_index + 1}")
