@@ -1,9 +1,17 @@
 from enum import Enum
 from aiohttp import ClientSession
 import asyncio
+import signal
 import logging
 import random
 import argparse
+
+stop_fetching = False
+def signal_handler(signal, frame):
+    global stop_fetching
+    stop_fetching = True
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)
 
 def generate_random_subject():
     subjects = [
@@ -112,29 +120,41 @@ async def fetch_with_retry(url, method, json_data, max_retries=3, delay=1):
         if attempt < max_retries - 1:
             await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
     return None
-
+MAX_RETRIES = 5
 async def continuous_fetch(server_index):
     gen_server = gen_servers[server_index]
     chat_setting = chatSettings[server_index]
-    
-    while True:
+    retries = 0
+
+    while not stop_fetching:
         try:
             url = f"{gen_server}/api/generate_conversation"
             result = await fetch_with_retry(url, HTTPMethod.POST, chat_setting)
             
             if result is not None:
                 print(f"Successful fetch for server {server_index + 1}")
+                retries = 0  # Reset retries on success
             else:
                 print(f"Fetch failed for server {server_index + 1}")
+                retries += 1
+                if retries >= MAX_RETRIES:
+                    logging.error(f"Max retries reached for server {server_index + 1}. Stopping fetch loop.")
+                    break
             
             # Update topic regardless of fetch success
             chat_setting["topic"] = generate_random_subject()
         
         except Exception as e:
             logging.error(f"Error in continuous fetch loop for server {server_index + 1}: {e}")
+            retries += 1
+            if retries >= MAX_RETRIES:
+                logging.error(f"Max retries reached for server {server_index + 1} due to exceptions. Stopping fetch loop.")
+                break
         
         # Optional: Add a small delay between iterations for this specific server
         await asyncio.sleep(0.1)
+    
+    print(f"Stopping fetch loop for server {server_index + 1}")
         
 # Create the parser
 parser = argparse.ArgumentParser(description="Process some arguments.")
@@ -148,9 +168,12 @@ args = parser.parse_args()
 # Access the value of 'n'
 n_value = args.n
 async def main():
-    tasks = [continuous_fetch(i) for i in range(n_value)]
+    tasks = [continuous_fetch(i) for i in range(len(gen_servers))]
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+        logging.basicConfig(level=logging.INFO)
+    except KeyboardInterrupt:
+        print("Interrupted by user")
