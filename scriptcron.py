@@ -113,7 +113,7 @@ async def fetch_with_retry(url, method, data, max_retries=5, delay=1):
         
         attempt += 1
         if attempt < max_retries:
-            await asyncio.sleep(delay * (2 ** attempt))  # Exponential backoff
+            await asyncio.sleep(delay)  # Exponential backoff
     return None
 
 MAX_RETRIES = 100
